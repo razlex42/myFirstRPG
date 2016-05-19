@@ -1,0 +1,2 @@
+class Encounter(object):
+    pass
