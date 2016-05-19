@@ -1,5 +1,7 @@
 import os
 import random
+import kbhit
+import gettermsize
 
 from utils import *
 from player import Player

@@ -3,8 +3,9 @@ import termios
 import tty
 import textwrap
 import shutil
+import os
 
-def locate(user_string="", x=0, y=0):
+def locate(user_string="", x=0, y=0, length=0):
     # Don't allow any user errors. Python's own error detection will check for
     # syntax and concatination, etc, etc, errors.
     x=int(x)
@@ -20,13 +21,38 @@ def locate(user_string="", x=0, y=0):
 
 def DrawBorders():
     sz = shutil.get_terminal_size()
-    print(sz)
-    print(sz.columns)
-    print(sz.lines)
-    locate('+',5,1)
-    for i in range(6, sz.columns - 5):
-        locate('-',i,1)
-    locate('+', sz.columns - 5, 1)
+    DrawBorder(3, 5, sz.lines-5, sz.columns - 5)
+    DrawHorizontalLine(5, sz.columns - 5, sz.lines - 10)
+    DrawVerticalLine(3, sz.lines-10, sz.columns - 50)
+
+def DrawBorder(top, left, bottom, right):
+    locate('+', left, top)
+    for i in range(left + 1, right):
+        locate('-', i, top)
+    locate('+', right, top)
+
+    for i in range(top + 1, bottom):
+        locate('|', left, i)
+        locate('|', right, i)
+
+    locate('+', left, bottom)
+    for i in range(left + 1, right):
+        locate('-', i, bottom)
+    locate('+', right, bottom)
+
+def DrawVerticalLine(top, bottom, x):
+    locate('+', x, top)
+    for i in range(top + 1, bottom):
+        locate('|', x, i)
+    locate('+', x, bottom)
+    pass
+
+def DrawHorizontalLine(left, right, y):
+    locate('+', left, y)
+    for i in range(left + 1, right):
+        locate('-', i, y)
+    locate('+', right, y)
+
 
 
 #locate('|                                        | Int: 14         |', 1, 2)
@@ -46,7 +72,8 @@ def GetKey():
         termios.tcsetattr(stdinFileDesc, termios.TCSADRAIN, oldStdinTtyAttr)
     return key
 
-
+def ClearScreen():
+    os.system('cls' if os.name == 'nt' else 'clear')
 #i = 21
 #for line in textwrap.wrap("This is a very long piece of text that should wrap a few times", 38):
 #    locate(line.ljust(38), 22, i)
@@ -56,5 +83,6 @@ def GetKey():
 #    locate()
 #locate('', 0,30)
 
+ClearScreen()
 DrawBorders()
 GetKey()
