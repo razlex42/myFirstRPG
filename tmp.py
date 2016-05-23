@@ -4,6 +4,7 @@ import tty
 import textwrap
 import shutil
 import os
+import colorconsole.terminal
 
 def locate(user_string="", x=0, y=0, length=0):
     # Don't allow any user errors. Python's own error detection will check for
@@ -17,7 +18,8 @@ def locate(user_string="", x=0, y=0, length=0):
     HORIZ=str(x)
     VERT=str(y)
     # Plot the user_string at the starting at position HORIZ, VERT...
-    print("\033["+VERT+";"+HORIZ+"f"+user_string)
+    #print("\033["+VERT+";"+HORIZ+"f"+user_string)
+    term.print_at(x,y,user_string)
 
 def DrawBorders():
     sz = shutil.get_terminal_size()
@@ -73,7 +75,7 @@ def GetKey():
     return key
 
 def ClearScreen():
-    os.system('cls' if os.name == 'nt' else 'clear')
+    term.clear()
 #i = 21
 #for line in textwrap.wrap("This is a very long piece of text that should wrap a few times", 38):
 #    locate(line.ljust(38), 22, i)
@@ -82,7 +84,9 @@ def ClearScreen():
 #for counter in range(1,30):
 #    locate()
 #locate('', 0,30)
-
+term = colorconsole.terminal.get_terminal()
+term.set_title("Test")
+term.clear()
 ClearScreen()
 DrawBorders()
 GetKey()
